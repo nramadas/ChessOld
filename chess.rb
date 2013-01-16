@@ -27,12 +27,13 @@ class GameBoard
 	end
 
 	def print_board
-		puts " \u2009 0  1  2  3  4  5  6  7"
+		puts "  \u2009 0  1  2  3  4  5  6  7"
 		@board.each_with_index do |row, row_index|
-			print "#{row_index} "
+			print "#{row_index} |"
 			row.each_with_index do |piece, col_index|
+				print "\u0332" unless col_index==0
 				if piece.nil?
-					print "__|"
+					print "  |"
 				else
 					if piece.player_type == :player1
 						print piece.token.blue
