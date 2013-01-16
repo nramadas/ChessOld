@@ -8,6 +8,7 @@ class Game
 end
 
 class GameBoard
+	attr_reader :board
 
 	def initialize
 		@board = Array.new(8) { Array.new(8) { nil } }
@@ -103,7 +104,10 @@ class Player
 
 end
 
+include CalculateMoves
+
 if __FILE__ == $PROGRAM_NAME
 	board = GameBoard.new
 	board.print_board
+	puts board.board[0][4].get_moves
 end
