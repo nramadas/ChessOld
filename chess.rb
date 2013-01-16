@@ -2,13 +2,14 @@
 
 require 'colorize'
 require './pieces.rb'
+require './player.rb'
 
 class Game
 
 end
 
 class GameBoard
-	attr_reader :board
+	attr_reader :board, :player1, :player2
 
 	def initialize
 		@board = Array.new(8) { Array.new(8) { nil } }
@@ -48,66 +49,59 @@ class GameBoard
 		end
 	end
 
+	def valid_move?(player, start_coord, end_coord)
+
+		start_row, start_col = start_coord
+		end_row, end_col = end_coord
+
+		# Check that player owns the piece at the start_coord
+		unless player.pieces_remaining.include?(@board[start_row][start_col])
+			return false
+		end
+
+		# Check that player doesn't own the piece at the end_coord
+		if player.pieces_remaining.include?(@board[end_row][end_col])
+			return false
+		end
+
+		# Make sure that the piece can move in that way
+		possible_moves = @board[start_row][start_col].get_moves
+		move_to_eval = possible_moves.select { |move| move[:coord] == end_coord }[0]
+		#p move_to_eval
+		return false if move_to_eval.nil?
+
+		# Make sure that the path is clear for the piece to move
+		return path_clear?(move_to_eval[:prev_move])
+
+	end
+
+	def path_clear?(move)
+		row, col = move[:coord]
+
+		if move[:prev_move].nil?
+			return true
+		elsif !@board[row][col].nil?
+			return false
+		else
+			return path_blocked?(move[:prev_move])
+		end
+	end
 end
 
-class Player
-	attr_accessor :pieces_remaining, :player_name
 
-	def initialize(player_name, player_type)
-		@player_name = player_name
-		@pieces_remaining = []
-		add_pawns(player_type)
-		add_rooks(player_type)
-		add_knights(player_type)
-		add_bishops(player_type)
-		add_king(player_type)
-		add_queen(player_type)
-	end
-
-	def add_pawns(player_type)
-		(0...8).each do |column|
-			row = (player_type == :player1) ? 1 : 6
-			@pieces_remaining << Pawn.new([row,column], player_type)
-		end
-	end
-
-	def add_rooks(player_type)
-		[0,7].each do |column|
-			row = (player_type == :player1) ? 0 : 7
-			@pieces_remaining << Rook.new([row,column], player_type)
-		end
-	end
-
-	def add_knights(player_type)
-		[1,6].each do |column|
-			row = (player_type == :player1) ? 0 : 7
-			@pieces_remaining << Knight.new([row,column], player_type)
-		end
-	end
-
-	def add_bishops(player_type)
-		[2,5].each do |column|
-			row = (player_type == :player1) ? 0 : 7
-			@pieces_remaining << Bishop.new([row,column], player_type)
-		end
-	end
-
-	def add_king(player_type)
-		row = (player_type == :player1) ? 0 : 7
-		@pieces_remaining << King.new([row,4], player_type)
-	end
-
-	def add_queen(player_type)
-		row = (player_type == :player1) ? 0 : 7
-		@pieces_remaining << Queen.new([row,3], player_type)
-	end
-
-end
 
 include CalculateMoves
 
 if __FILE__ == $PROGRAM_NAME
 	board = GameBoard.new
 	board.print_board
-	puts board.board[0][4].get_moves
+	#p board.board[1][0].get_moves
+	puts board.valid_move?(board.player1, [1, 0], [2, 0])
+	puts board.valid_move?(board.player1, [1, 0], [2, 1])
+	puts board.valid_move?(board.player1, [1, 0], [1, 1])
+	puts board.valid_move?(board.player1, [1, 0], [0, 1])
+	puts board.valid_move?(board.player1, [1, 0], [0, 0])
+	puts board.valid_move?(board.player1, [1, 0], [3, 0])
+
+
 end
