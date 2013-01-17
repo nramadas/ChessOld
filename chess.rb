@@ -6,12 +6,29 @@ require './pieces.rb'
 require './player.rb'
 
 class Game
+	# NOTHING IN THE GAME CLASS IS REAL CODE!!!!
+	# This is more or less just simple stuff we're using to test out our chess
+	# implementation
+	def initialize
+		@game_board = GameBoard.new
+	end
 
-
-
-
-
-
+	def play
+		while true
+			@game_board.print_board
+			puts "Player 1 (top) please move..."
+			while true
+				move = @game_board.player1.get_move
+				break if @game_board.execute_move(@game_board.player1, move[0], move[1])
+			end
+			@game_board.print_board
+			puts "Player 2 (bottom) please move..."
+			while true
+				move = @game_board.player2.get_move
+				break if @game_board.execute_move(@game_board.player2, move[0], move[1])
+			end
+		end
+	end
 end
 
 class GameBoard
@@ -35,9 +52,9 @@ class GameBoard
 	end
 
 	def print_board
-		puts "  \u2009 0  1  2  3  4  5  6  7"
+		puts "  \u2009 a  b  c  d  e  f  g  h"
 		@board.each_with_index do |row, row_index|
-			print "#{row_index} |"
+			print "#{(1..8).to_a.reverse[row_index]} |"
 			row.each_with_index do |piece, col_index|
 				print "\u0332" unless col_index==0
 				if piece.nil?
@@ -70,8 +87,9 @@ class GameBoard
 			@board[start_coord[0]][start_coord[1]] = nil
 			@board[end_coord[0]][end_coord[1]] = start_piece
 			start_piece.coordinates = end_coord
+			return true
 		else
-			puts "invalid move"
+			return false
 		end
 	end
 
@@ -127,37 +145,6 @@ class GameBoard
 end
 
 if __FILE__ == $PROGRAM_NAME
-	board = GameBoard.new
-	board.print_board
-	# puts board.board[6][3].get_moves
-
-	# puts board.valid_move?(board.player1, [1, 1], [2, 1])
-	# puts board.valid_move?(board.player1, [1, 1], [2, 2])
-	# puts board.valid_move?(board.player1, [1, 1], [1, 2])
-	# puts board.valid_move?(board.player1, [1, 1], [0, 2])
-	# puts board.valid_move?(board.player1, [1, 1], [0, 1])
-	# puts board.valid_move?(board.player1, [1, 1], [3, 1])
-
-	# puts board.valid_move?(board.player1, [0, 2], [0, 1])
-	# puts board.valid_move?(board.player1, [0, 2], [1, 1])
-	# puts board.valid_move?(board.player1, [0, 2], [2, 0])
-	# puts board.valid_move?(board.player1, [0, 2], [1, 3])
-	# puts board.valid_move?(board.player1, [0, 2], [2, 4])
-	# puts board.valid_move?(board.player1, [0, 2], [5, 5])
-	board.execute_move(board.player2, [6,0], [4,0])
-	board.print_board
-	board.execute_move(board.player2, [4,0], [3,0])
-	board.print_board
-	board.execute_move(board.player2, [3,0], [2,0])
-	board.print_board
-	board.execute_move(board.player2, [2,0], [1,1])
-	board.print_board
-	board.execute_move(board.player1, [0,2], [1,1])
-	board.print_board
-	board.execute_move(board.player1, [1,1], [6,6])
-	board.print_board
-	board.execute_move(board.player2, [7,6], [5,6])
-	board.print_board
-	board.execute_move(board.player2, [7,6], [5,5])
-	board.print_board
+	game = Game.new
+	game.play
 end

@@ -4,7 +4,6 @@ class Piece
 
   def initialize(coordinates, player_type)
     @coordinates, @player_type = coordinates, player_type
-    @captured = false
     @token = ""
   end
 

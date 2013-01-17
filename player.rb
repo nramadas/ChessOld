@@ -56,16 +56,13 @@ class Player
     puts "Enter your move (ex: a2 a4):"
     print "> "
     input = gets.chomp.downcase.split
-    input.map { |coord| coord.split('') }
-    input.map { |coord| [('a'..'h').to_a.index(coord[0]),coord[1]] }
-
-
-
-
-
-
-
-
-
-
+    move = []
+    input.each do |coord|
+      # Note, we use rows, cols. But in chess notation, cols comes first
+      # Here, we switch them.
+      move << [(1..8).to_a.reverse.index(coord[1].to_i),
+              ('a'..'h').to_a.index(coord[0])]
+    end
+    move
+  end
 end
