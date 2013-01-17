@@ -1,3 +1,7 @@
+# RD - all looks good, multi-file apprach is nice
+# I'm asking myself how you decided to use certain symbols for variable names
+# and, of course, why you are idnenting so much ;)
+
 #!/usr/bin/env ruby
 
 require 'debugger'
