@@ -1,20 +1,6 @@
-module CalculateMoves
-  # def move_knight(start_coord)
-
-  # end
-
-  # def move_pawn(start_coord)
-  #   move_straight(start_coord, true) + move_diagonal(start_coord, true)
-  # end
-
-  # def move_king(start_coord)
-end
-
 class Piece
   attr_reader :token
   attr_accessor :captured, :coordinates, :player_type
-
-  #include CalculateMoves
 
   def initialize(coordinates, player_type)
     @coordinates, @player_type = coordinates, player_type
@@ -24,41 +10,53 @@ class Piece
 
   private
 
-  def move_straight(start_coord, once = false)
+  def move_straight(start_coord, times = 10)
     possible_moves = []
     row, col = start_coord
 
     [[-1,0],[1,0],[0,-1],[0,1]].each do |pair|
       move = { :coord => start_coord, :prev_move => nil }
       x,y = row,col
+      do_counter = 0
       until (x + pair[0] < 0 || x + pair[0] > 7 ||
               y + pair[1] < 0 || y + pair[1] > 7)
+
+        do_counter += 1
+
         temp = move
         move = { :coord => [x + pair[0], y + pair[1]],
                             :prev_move => temp }
+
         possible_moves << move
-        x,y = x+pair[0], y+pair[1]
-        break if once
+        x, y = x + pair[0], y + pair[1]
+
+        break if do_counter == times
       end
     end
     possible_moves
   end
 
-  def move_diagonal(start_coord, once = false)
+  def move_diagonal(start_coord, times = 10)
     possible_moves = []
     row, col = start_coord
 
     [[-1,-1],[-1,1],[1,-1],[1,1]].each do |pair|
       move = { :coord => start_coord, :prev_move => nil }
       x,y = row,col
+      do_counter = 0
       until (x + pair[0] < 0 || x + pair[0] > 7 ||
               y + pair[1] < 0 || y + pair[1] > 7)
+
+        do_counter += 1
+
         temp = move
         move = { :coord => [x + pair[0], y + pair[1]],
                             :prev_move => temp }
+
         possible_moves << move
-        x,y = x+pair[0], y+pair[1]
-        break if once
+        x, y = x + pair[0], y + pair[1]
+
+        break if do_counter == times
       end
     end
     possible_moves
@@ -72,12 +70,17 @@ class Pawn < Piece
   def initialize(coordinates, player_type)
     super
     @token = "\u2659"
-    @made_first_move = false
+    @coordinates_at_start = coordinates
   end
 
   def get_moves
-    possible_moves = move_straight(@coordinates, true) +
-                      move_diagonal(@coordinates, true)
+    if @coordinates == @coordinates_at_start
+      possible_moves = move_straight(@coordinates, 2) +
+                      move_diagonal(@coordinates, 1)
+    else
+      possible_moves = move_straight(@coordinates, 1) +
+                      move_diagonal(@coordinates, 1)
+    end
     if @player_type == :player1
       possible_moves.delete_if { |move| move[:coord][0] <= @coordinates[0] }
     else
@@ -94,7 +97,6 @@ class Rook < Piece
   def initialize(coordinates, player_type)
     super
     @token = "\u2656"
-    @made_first_move = false
   end
 
   def get_moves
@@ -144,11 +146,10 @@ class King < Piece
   def initialize(coordinates, player_type)
     super
     @token = "\u2654"
-    @made_first_move = false
   end
 
   def get_moves
-    move_straight(@coordinates, true) + move_diagonal(@coordinates, true)
+    move_straight(@coordinates, 1) + move_diagonal(@coordinates, 1)
   end
 
 end

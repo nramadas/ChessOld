@@ -52,4 +52,20 @@ class Player
     @pieces_remaining << Queen.new([row,3], player_type)
   end
 
+  def get_move
+    puts "Enter your move (ex: a2 a4):"
+    print "> "
+    input = gets.chomp.downcase.split
+    input.map { |coord| coord.split('') }
+    input.map { |coord| [('a'..'h').to_a.index(coord[0]),coord[1]] }
+
+
+
+
+
+
+
+
+
+
 end
