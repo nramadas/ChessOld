@@ -76,7 +76,14 @@ class Pawn < Piece
   end
 
   def get_moves
-    move_straight(@coordinates, true) + move_diagonal(@coordinates, true)
+    possible_moves = move_straight(@coordinates, true) +
+                      move_diagonal(@coordinates, true)
+    if @player_type == :player1
+      possible_moves.delete_if { |move| move[:coord][0] <= @coordinates[0] }
+    else
+      possible_moves.delete_if { |move| move[:coord][0] >= @coordinates[0] }
+    end
+    possible_moves
   end
 
 end

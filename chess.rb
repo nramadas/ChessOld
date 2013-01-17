@@ -38,9 +38,9 @@ class GameBoard
 					print "  |"
 				else
 					if piece.player_type == :player1
-						print piece.token.blue
-					else
 						print piece.token.red
+					else
+						print piece.token.yellow
 					end
 					print " |"
 				end
@@ -50,24 +50,27 @@ class GameBoard
 	end
 
 	def valid_move?(player, start_coord, end_coord)
-
-		start_row, start_col = start_coord
-		end_row, end_col = end_coord
+		piece = @board[start_coord[0]][start_coord[1]]
 
 		# Check that player owns the piece at the start_coord
-		unless player.pieces_remaining.include?(@board[start_row][start_col])
+		unless player.pieces_remaining.include?(piece)
 			return false
 		end
 
 		# Check that player doesn't own the piece at the end_coord
-		if player.pieces_remaining.include?(@board[end_row][end_col])
+		if player.pieces_remaining.include?(piece)
 			return false
 		end
 
 		# Make sure that the piece can move in that way
-		possible_moves = @board[start_row][start_col].get_moves
+		case piece.is_a?
+		when Pawn
+
+		else
+			possible_moves = piece.get_moves
+		end
+
 		move_to_eval = possible_moves.select { |move| move[:coord] == end_coord }[0]
-		#p move_to_eval
 		return false if move_to_eval.nil?
 
 		# Make sure that the path is clear for the piece to move
@@ -95,13 +98,21 @@ include CalculateMoves
 if __FILE__ == $PROGRAM_NAME
 	board = GameBoard.new
 	board.print_board
-	#p board.board[1][0].get_moves
-	puts board.valid_move?(board.player1, [1, 0], [2, 0])
-	puts board.valid_move?(board.player1, [1, 0], [2, 1])
-	puts board.valid_move?(board.player1, [1, 0], [1, 1])
-	puts board.valid_move?(board.player1, [1, 0], [0, 1])
-	puts board.valid_move?(board.player1, [1, 0], [0, 0])
-	puts board.valid_move?(board.player1, [1, 0], [3, 0])
+	puts board.board[6][3].get_moves
+	# puts board.valid_move?(board.player1, [1, 0], [2, 0])
+	# puts board.valid_move?(board.player1, [1, 0], [2, 1])
+	# puts board.valid_move?(board.player1, [1, 0], [1, 1])
+	# puts board.valid_move?(board.player1, [1, 0], [0, 1])
+	# puts board.valid_move?(board.player1, [1, 0], [0, 0])
+	# puts board.valid_move?(board.player1, [1, 0], [3, 0])
+
+	# puts board.valid_move?(board.player1, [0, 2], [0, 1])
+	# puts board.valid_move?(board.player1, [0, 2], [1, 1])
+	# puts board.valid_move?(board.player1, [0, 2], [2, 0])
+	# puts board.valid_move?(board.player1, [0, 2], [1, 3])
+	#puts board.valid_move?(board.player1, [0, 2], [2, 4])
+	# puts board.valid_move?(board.player1, [0, 2], [5, 5])
+
 
 
 end
