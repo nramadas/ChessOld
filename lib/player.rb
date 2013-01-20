@@ -1,4 +1,4 @@
-require './lib/pieces.rb'
+require_relative 'pieces.rb'
 
 class Player
   attr_accessor :pieces_remaining, :player_name

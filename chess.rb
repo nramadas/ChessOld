@@ -3,9 +3,9 @@
 require 'debugger'
 require 'colorize'
 require 'YAML'
-require './lib/pieces.rb'
-require './lib/player.rb'
-require './lib/gameboard.rb'
+require_relative 'lib/pieces.rb'
+require_relative 'lib/player.rb'
+require_relative 'lib/gameboard.rb'
 
 class Game
 	def initialize
