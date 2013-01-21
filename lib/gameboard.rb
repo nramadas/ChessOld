@@ -6,7 +6,6 @@ class GameBoard
     @player1 = Player.new("1", :player1)
     @player2 = Player.new("2", :player2)
     build_board([@player1, @player2])
-    #load
   end
 
   def build_board(players)
@@ -49,7 +48,6 @@ class GameBoard
 
   def execute_move(player, start_coord, end_coord)
     if valid_move?(player, start_coord, end_coord)
-      #debugger
 
       # Make a copy of the current board
       File.open("./data/player1_exec", "w") { |f| f.write(@player1.to_yaml) }
@@ -88,7 +86,6 @@ class GameBoard
   end
 
   def check?(player)
-    #debugger
     king = player.pieces_remaining.select { |piece| piece.is_a?(King) }[0]
     opponent = other_player(player)
     opponent.pieces_remaining.select do |piece|
